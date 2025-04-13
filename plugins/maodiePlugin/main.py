@@ -42,7 +42,7 @@ class MaodiePlugin(BasePlugin):
     
     async def on_close(self):
         '''插件卸载时执行的操作'''
-        self.data['counter'] = self.argParser.counter
+        self.argParser.on_close()
 
         _log.info(f"{self.name} 插件已卸载")
 
@@ -81,7 +81,7 @@ class MaodiePlugin(BasePlugin):
             return
 
         # 处理消息
-        message = self.argParser.parse_text(text_data['text'], msg.user_id, True)
+        message = self.argParser.parse_text(text_data['text'], msg.user_id, True, msg.group_id)
         if message is not None:
             _log.info(msg)
             message += At(msg.user_id)
@@ -97,9 +97,8 @@ class MaodiePlugin(BasePlugin):
             return
 
         # 处理消息
-        message = self.argParser.parse_text(text_data['text'], msg.user_id, False)
+        message = self.argParser.parse_text(text_data['text'], msg.user_id, False, 0)
         if message is not None:
             _log.info(msg)
-            message += Text("主人的图片喵~ ")
             await self.api.post_private_msg(user_id=msg.user_id, rtf=message)
         

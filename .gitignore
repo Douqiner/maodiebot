@@ -1,5 +1,6 @@
 logs/
 napcat/
 data/
+plugins/maodiePlugin/__pycache__/
 plugins/maodiePlugin/static/images/
 plugins/maodiePlugin/static/image_dir.json
