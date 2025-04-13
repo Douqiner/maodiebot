@@ -67,7 +67,7 @@ class ArgParser:
         if arg is None or len(arg) == 0:
             # 随机图片
             message += self.imageManager.get_image_message()
-            mmessage += Text("主人的图片喵~\n")
+            message += Text("主人的图片喵~\n")
             self.add_count("st")
             
         elif len(arg) == 1:
@@ -80,7 +80,7 @@ class ArgParser:
                 message += self.handle_help()
                 return message
             message += self.imageManager.get_image_message(image_id)
-            mmessage += Text("主人的图片喵~\n")
+            message += Text("主人的图片喵~\n")
             self.add_count("st")
         else:
             # 错误参数
