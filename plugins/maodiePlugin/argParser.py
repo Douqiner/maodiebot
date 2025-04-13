@@ -25,7 +25,7 @@ class ArgParser:
     def __init__(self, data: dict):
         self.data = data
         self.imageManager = ImageManager()
-        self.game1Manager = Game1Manager(data)
+        self.game1Manager = Game1Manager()
         if 'counter' in self.data:
             self.counter = self.data['counter']
     
@@ -128,6 +128,7 @@ class ArgParser:
             Text(
             "使用方法：\n" \
             "随机图片 /st <可选:指定图片id>\n" \
+            "小游戏1 /gm1 \n" \
             "只有这些功能喵~"
             )
         ])
