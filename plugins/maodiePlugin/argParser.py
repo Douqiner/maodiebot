@@ -43,11 +43,11 @@ class ArgParser:
         else:
             self.counter[inst][self.last_uid][0] += 1
 
-    def parse_text(self, text: str, uid: int, is_group: bool, last_gid: int) -> MessageChain:
+    def parse_text(self, text: str, uid: int, is_group: bool, gid: int) -> MessageChain:
         '''解析文本命令'''
         self.last_uid = uid
         self.last_is_group = is_group
-        self.last_gid = last_gid
+        self.last_gid = gid
 
         text = text.strip()
         if (text[0] == '/'):
@@ -99,7 +99,7 @@ class ArgParser:
             # 帮助信息
             message += Text(
                 "小游戏1规则: \n" \
-                "路上从左到右有n个小石子\n" \
+                "路上从左到右有n个格子,有的格子上有石子\n" \
                 "高松灯想和你比捡石子\n" \
                 "每个人每轮可以站在最左边的石子处\n" \
                 "捡走右侧k范围内的任意石子\n" \
@@ -109,7 +109,7 @@ class ArgParser:
                 "/gm1 beg <大于6小于30的整数n> <大于2小于n/3的整数k> <先后手:1,0> \n" \
                 "/gm1 sl <选择拿走哪些石子> \n" \
                 "比如: /gm1 sl 1 2 3 \n 表示拿走当前位置第1、2、3个石子\n" \
-                "/gm1 show <显示当前局面> \n" \
+                "/gm1 show \n显示当前局面 \n" \
                 "/gm1 end \n" \
                 "结束游戏" \
 

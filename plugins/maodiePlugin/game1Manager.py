@@ -13,7 +13,7 @@ class Game1Manager:
     """游戏1类"""
     data = {}
     rate_shizi = 0.7
-    change_to_win = 0.5
+    change_to_win = 0.7
 
     last_uid = 0
     last_is_group = False
@@ -89,7 +89,7 @@ class Game1Manager:
             game_data = self.get_game_save()
             if game_data is None:
                 return self.message
-            shizi, k, is_win = self.user_game[uid]
+            shizi, k, is_win = game_data
             n = len(shizi)
             
             # 检查范围
@@ -131,7 +131,7 @@ class Game1Manager:
             game_data = self.get_game_save()
             if game_data is None:
                 return self.message
-            shizi, k, is_win = self.user_game[uid]
+            shizi, k, is_win = game_data
             n = len(shizi)
             self.show_game()
         
@@ -229,7 +229,7 @@ class Game1Manager:
                 else:
                     # 如果后两步必败,就拿完
                     strategy = [i + pos for i in range(k) if pos + i < n and shizi[pos + i] == 1]
-                    return (True, True)
+                    return (True, strategy)
             else:
                 return True
         
@@ -283,6 +283,13 @@ class Game1Manager:
                 
         else:
             self.message += Text("这把怎么如此艰难\n(╯‵□′)╯︵┻━┻\n")
+        
+        # 修改必胜记录
+        if is_win:
+            if self.last_is_group:
+                self.group_game[self.last_gid] = (shizi, k, True)
+            else:
+                self.user_game[self.last_uid] = (shizi, k, True)
             
         return strategy
     
