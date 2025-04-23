@@ -17,11 +17,10 @@ _log = get_log()
 
 class ImageManager:
     '''图片管理器类'''
-    image_dir = {}
-    image_path = os.path.join(os.path.dirname(__file__), "static", "images")
-    dir_path = os.path.join(os.path.dirname(__file__), "static", "image_dir.json")
-
     def __init__(self):
+        self.image_dir = {}
+        self.image_path = os.path.join(os.path.dirname(__file__), "static", "images")
+        self.dir_path = os.path.join(os.path.dirname(__file__), "static", "image_dir.json")
         # 读取image_dir
         with open(self.dir_path, "r", encoding="utf-8") as f:
             self.image_dir = json.load(f)

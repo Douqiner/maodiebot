@@ -10,27 +10,22 @@ from ncatbot.core import (
 
 from .imageManager import ImageManager
 from .game1Manager import Game1Manager
+from .pcrMtManager import PcrMtManager
 
 class ArgParser:
     """命令参数解析器"""
-    data = {}
-    imageManager = None
-    game1Manager = None
-
-    counter = {}
-    last_uid = 0
-    last_is_group = False
-    last_gid = 0
-
     def __init__(self, data: dict):
         self.data = data
         self.imageManager = ImageManager()
         self.game1Manager = Game1Manager()
+        self.pcrMtManager = PcrMtManager()
+        self.counter = {}
         if 'counter' in self.data:
             self.counter = self.data['counter']
     
     def on_close(self):
         self.data['counter'] = self.counter
+        self.pcrMtManager.on_close()
     
     def add_count(self, inst: str):
         '''增加计数器'''
@@ -43,9 +38,10 @@ class ArgParser:
         else:
             self.counter[inst][self.last_uid][0] += 1
 
-    def parse_text(self, text: str, uid: int, is_group: bool, gid: int) -> MessageChain:
+    def parse_text(self, text: str, uid: int, uname: str, is_group: bool, gid: int) -> MessageChain:
         '''解析文本命令'''
         self.last_uid = uid
+        self.last_uname = uname
         self.last_is_group = is_group
         self.last_gid = gid
 
@@ -58,6 +54,8 @@ class ArgParser:
                 return self.handle_st(text[1:])
             elif text[0] == 'gm1':
                 return self.handle_gm1(text[1:])
+            elif text[0] == 'mt':
+                return self.handle_mt(text[1:])
             
             # 有错
             return self.handle_help()
@@ -119,6 +117,28 @@ class ArgParser:
         elif len(arg) >= 1:
             message += self.game1Manager.parse_game_text(arg, self.last_uid, self.last_is_group, self.last_gid)
             self.add_count("gm1")
+
+        return message
+    
+    def handle_mt(self, arg: list[str] = None) -> MessageChain:
+        '''处理mt命令'''
+        message = MessageChain([])
+        if arg is None or len(arg) == 0:
+            # 帮助信息
+            message += Text(
+                "pcr答题指令: \n" \
+                "/mt beg <1-5>\n" \
+                "指定待填空数 开始游戏\n\n" \
+                "/mt ans <1-5> <答案>\n" \
+                "指定位置进行填空\n\n" \
+                "mt set <角色名字>\n" \
+                "修改自己的角色"
+            )
+            self.add_count("mt")
+            
+        elif len(arg) >= 1:
+            message += self.pcrMtManager.parse_game_text(arg, self.last_uid, self.last_uname, self.last_is_group, self.last_gid)
+            self.add_count("mt")
 
         return message
 

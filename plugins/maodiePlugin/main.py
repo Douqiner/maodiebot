@@ -23,8 +23,6 @@ class MaodiePlugin(BasePlugin):
     name = "MaodiePlugin" # 插件名
     version = "0.0.1" # 插件版本
 
-    argParser = None # 参数解析器
-
     async def on_load(self):
         '''插件加载时执行的操作'''
         _log.info(f"{self.name} 插件已加载")
@@ -81,7 +79,10 @@ class MaodiePlugin(BasePlugin):
             return
 
         # 处理消息
-        message = self.argParser.parse_text(text_data['text'], msg.user_id, True, msg.group_id)
+        name = msg.sender.nickname
+        if msg.sender.card != '':
+            name = msg.sender.card
+        message = self.argParser.parse_text(text_data['text'], msg.user_id, name, True, msg.group_id)
         if message is not None:
             _log.info(msg)
             message += At(msg.user_id)
@@ -97,7 +98,7 @@ class MaodiePlugin(BasePlugin):
             return
 
         # 处理消息
-        message = self.argParser.parse_text(text_data['text'], msg.user_id, False, 0)
+        message = self.argParser.parse_text(text_data['text'], msg.user_id, msg.sender.nickname, False, 0)
         if message is not None:
             _log.info(msg)
             await self.api.post_private_msg(user_id=msg.user_id, rtf=message)

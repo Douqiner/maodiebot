@@ -11,18 +11,18 @@ from ncatbot.core import (
 
 class Game1Manager:
     """游戏1类"""
-    data = {}
-    rate_shizi = 0.7
-    change_to_win = 0.7
+    def __init__(self):
+        self.group_game = {}
+        self.user_game = {}
+        self.message = MessageChain([])
 
-    last_uid = 0
-    last_is_group = False
-    last_gid = 0
+        self.last_uid = 0
+        self.last_is_group = False
+        self.last_gid = 0
 
-    group_game = {}
-    user_game = {}
+        self.rate_shizi = 0.7
+        self.change_to_win = 0.7
 
-    message = None
     
     def get_game_save(self):
         '''获取游戏存档'''
@@ -37,7 +37,7 @@ class Game1Manager:
                 return None
             return self.user_game[self.last_uid]
 
-    def parse_game_text(self, text: str, uid: int, is_group: bool, gid: int) -> MessageChain:
+    def parse_game_text(self, text: list[str], uid: int, is_group: bool, gid: int) -> MessageChain:
         """解析游戏文本命令"""
         self.last_uid = uid
         self.last_is_group = is_group
