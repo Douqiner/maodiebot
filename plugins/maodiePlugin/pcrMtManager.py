@@ -445,7 +445,7 @@ class PcrMtManager:
         # 随机选择人机位置
         guesserList = [0] * 5
         random5pos = [0, 1, 2, 3, 4]
-        random.shuffle([0, 1, 2, 3, 4])
+        random.shuffle(random5pos)
         for i in range(5 - empty_num):
             pos = random5pos[i]
             # 随机选择2d编号

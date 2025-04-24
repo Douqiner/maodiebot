@@ -5,4 +5,4 @@ plugins/maodiePlugin/__pycache__/
 plugins/maodiePlugin/static/images/
 plugins/maodiePlugin/static/image_dir.json
 plugins/maodiePlugin/static/pcr/userNo2d.json
-plugins/maodiePlugin/static/pcr/tmp/*
+plugins/maodiePlugin/static/pcr/tmp/*.png
