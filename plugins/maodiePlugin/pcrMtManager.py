@@ -405,6 +405,7 @@ class PcrMtManager:
         if os.path.exists(os.path.join(self.pcrPath, 'userNo2d.json')):
             with open(os.path.join(self.pcrPath, 'userNo2d.json'), 'r', encoding='utf-8') as f:
                 self.userNo2d = json.load(f)
+        self.userNo2d = {int(k): v for k, v in self.userNo2d.items()}
         
         # 方便传参
         self.last_uid = ""
