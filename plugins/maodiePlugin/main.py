@@ -8,10 +8,8 @@ from ncatbot.core import (
     MessageChain,  # 消息链，用于组合多个消息元素
     Text,          # 文本消息
     At,            # @某人
-    AtAll,         # @全体成员
     Face,          # QQ表情
     Image,         # 图片
-    Json,          # JSON消息
 )
 
 from .argParser import ArgParser
@@ -29,7 +27,7 @@ class MaodiePlugin(BasePlugin):
         _log.info(f"插件版本: {self.version}")
         
         # 载入参数解析器
-        self.argParser = ArgParser(self.data)
+        self.argParser = ArgParser()
 
         # 每日任务
         self.add_scheduled_task(
@@ -63,10 +61,10 @@ class MaodiePlugin(BasePlugin):
         text_data = None
         at_data = None
         for i in msg.message:
-            if i['type'] == 'text':
-                text_data = i['data']
-            elif i['type'] == 'at':
-                at_data = i['data']
+            if i.msg_seg_type == 'text':
+                text_data = i.text
+            elif i.msg_seg_type == 'at':
+                at_data = i.qq
         
         return (text_data, at_data)
         
@@ -75,14 +73,14 @@ class MaodiePlugin(BasePlugin):
         '''群组消息处理'''
         # 查找类型消息
         text_data ,at_data = self.get_text_and_at(msg)
-        if text_data is None or at_data is None or at_data['qq'] != config.bt_uin:
+        if text_data is None or at_data != config.bt_uin:
             return
 
         # 处理消息
         name = msg.sender.nickname
         if msg.sender.card != '':
             name = msg.sender.card
-        message = self.argParser.parse_text(text_data['text'], msg.user_id, name, True, msg.group_id)
+        message = self.argParser.parse_text(text_data, msg.user_id, name, True, msg.group_id)
         if message is not None:
             _log.info(msg)
             message += At(msg.user_id)
@@ -98,7 +96,7 @@ class MaodiePlugin(BasePlugin):
             return
 
         # 处理消息
-        message = self.argParser.parse_text(text_data['text'], msg.user_id, msg.sender.nickname, False, 0)
+        message = self.argParser.parse_text(text_data, msg.user_id, msg.sender.nickname, False, 0)
         if message is not None:
             _log.info(msg)
             await self.api.post_private_msg(user_id=msg.user_id, rtf=message)

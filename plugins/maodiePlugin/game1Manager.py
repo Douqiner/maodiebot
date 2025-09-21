@@ -3,10 +3,8 @@ from ncatbot.core import (
     MessageChain,  # 消息链，用于组合多个消息元素
     Text,          # 文本消息
     At,            # @某人
-    AtAll,         # @全体成员
     Face,          # QQ表情
     Image,         # 图片
-    Json,          # JSON消息
 )
 
 class Game1Manager:
