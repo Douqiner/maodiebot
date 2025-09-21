@@ -11,7 +11,7 @@ rule = re.compile(r'''</script><link.*?content='.*?"original":"(?P<LINK>.*?)"}''
 pid_url_list = []
 download_url_list = set()
 
-uid_path = os.path.join(os.path.dirname(__file__), "uid.txt")
+uid_path = os.path.join(os.path.dirname(__file__), "uid.py")
 save_path = os.path.join(os.path.dirname(__file__), "images")
 dir_path = os.path.join(os.path.dirname(__file__), "image_dir.json")
 # 读取文件uid
