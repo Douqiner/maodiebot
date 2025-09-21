@@ -7,7 +7,7 @@ from requests.exceptions import ProxyError
 
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
                          "Chrome/97.0.4692.71 Safari/537.36", 'referer': "https://www.pixiv.net/"}
-rule = re.compile(r'''</script><link.*?content='.*?"original":"(?P<LINK>.*?)"}''', re.S)
+rule = re.compile(r'"original":"(?P<LINK>.*?)"', re.S)
 pid_url_list = []
 download_url_list = set()
 
@@ -37,7 +37,8 @@ for uid, max_cnt in uid_list:
 
     cnt = 0
     for i in ill_list:
-        pid_url_list.append(f"https://www.pixiv.net/artworks/{i}")
+        # pid_url_list.append(f"https://www.pixiv.net/artworks/{i}")
+        pid_url_list.append(f"https://www.pixiv.net/ajax/illust/{i}/pages")
         cnt += 1
         if (int)(max_cnt) != 0 and cnt >= (int)(max_cnt):
             break
@@ -49,6 +50,7 @@ def get_ill_url(pid_url):
     try:
         rec = requests.get(url=pid_url, headers=headers)
         d_url = re.findall(rule, rec.text)
+        d_url = [u.replace("\\/", "/") for u in d_url]
         rec.close()
         for ill in d_url:
             download_url_list.add(ill)
