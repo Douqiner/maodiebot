@@ -1,5 +1,6 @@
 import os
 import feedparser
+import random
 from ncatbot.core import message
 
 from ncatbot.core import (
@@ -36,7 +37,10 @@ class NewsManager:
     def fetch_news(self, url : str, cnt: int) -> list:
         '''获取新闻'''
         feed = feedparser.parse(url)
-        return feed.entries if len(feed.entries) < cnt else feed.entries[:cnt]
+        entries = feed.entries
+        num = min(cnt, len(entries))
+        # 随机选择 num 个新闻
+        return random.sample(entries, num) if num > 0 else []
 
     def get_news_message(self, type: str = "mixed", cnt: int = 6) -> MessageChain:
         '''获取新闻信息消息'''
