@@ -9,6 +9,7 @@ from ncatbot.core import (
 from .imageManager import ImageManager
 from .game1Manager import Game1Manager
 from .pcrMtManager import PcrMtManager
+from .newsManager import NewsManager
 
 class ArgParser:
     """命令参数解析器"""
@@ -16,6 +17,7 @@ class ArgParser:
         self.imageManager = ImageManager()
         self.game1Manager = Game1Manager()
         self.pcrMtManager = PcrMtManager()
+        self.newsManager = NewsManager()
     
     def on_close(self):
         self.pcrMtManager.on_close()
@@ -37,6 +39,8 @@ class ArgParser:
             return self.handle_gm1(text[1:])
         elif text[0] == 'mt':
             return self.handle_mt(text[1:])
+        elif text[0] == 'news':
+            return self.handle_news(text[1:])
         
         # 有错
         return self.handle_help()
@@ -113,6 +117,16 @@ class ArgParser:
             message += self.pcrMtManager.parse_game_text(arg, self.last_uid, self.last_uname, self.last_is_group, self.last_gid)
 
         return message
+    
+    def handle_news(self, arg: list[str] = None) -> MessageChain:
+        '''处理news命令'''
+        message = MessageChain([])
+        if arg is None or len(arg) == 0:
+            arg = ["mixed"]
+            
+        message += self.newsManager.parse_text(arg)
+
+        return message
 
     def handle_help(self, arg: list[str] = None) -> MessageChain:
         '''处理帮助命令'''
@@ -122,6 +136,7 @@ class ArgParser:
             "随机图片 st <可选:指定图片id>\n" \
             "小游戏1 gm1 \n" \
             "兰德索尔谜题连结 mt \n" \
+            "新闻 news \n" \
             "只有这些功能喵~"
             )
         ])

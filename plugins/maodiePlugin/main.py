@@ -35,6 +35,18 @@ class MaodiePlugin(BasePlugin):
             name="每日推荐", 
             interval="08:00",
         )
+
+        self.add_scheduled_task(
+            job_func=self.dailynews, 
+            name="每日早报", 
+            interval="10:00",
+        )
+
+        # self.add_scheduled_task(
+        #     job_func=self.dailynews, 
+        #     name="每日晚报", 
+        #     interval="19:00",
+        # )
     
     async def on_close(self):
         '''插件卸载时执行的操作'''
@@ -55,6 +67,20 @@ class MaodiePlugin(BasePlugin):
             ])
             message += self.argParser.imageManager.get_image_message()
             await self.api.post_group_msg(group_id=g_id, rtf=message)
+
+    async def dailynews(self):
+        '''每日新闻'''
+        _log.info("每日新闻任务")
+        # 发送消息到指定群组
+        group_list = [527017070]
+        for g_id in group_list:
+            message = MessageChain([
+                Text("----今日要闻----\n")
+            ])
+            news = self.argParser.newsManager.get_news_message()
+            if news is not None:
+                message += news
+                await self.api.post_group_msg(group_id=g_id, rtf=message)
 
     def get_text_and_at(self, msg: message):
         '''查找类型消息'''
